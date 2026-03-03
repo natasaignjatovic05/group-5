@@ -18,6 +18,7 @@ In addition to happiness ratings, the dataset includes frequency ranks of words 
 These frequency ranks indicate how often each word appears in different types of texts.
 
 The labMT dataset allows researchers to estimate the overall happiness of large collections of text by averaging the happiness scores of the words they contain.
+
 ## Data Preparation: Formalization
 
 "In this project, 'cleaning' is understood as formalization: the process of making our humanistic and interpretive assumptions explicit in code."
