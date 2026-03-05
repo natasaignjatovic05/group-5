@@ -158,14 +158,14 @@ Our audit shows that the "Regularities" we find (mathematical patterns) are a sn
 | **word** | **category** | **happiness_average** | **happiness_standard_deviation** |
 | :--- | :--- | :--- | :--- |
 | **love** | positive  |8.42 | 1.1082 |
-| **successfull** | positive | 8.16 | 1.08597
-| **laughing** | positive | 8.271.066 |
+| **successfull** | positive | 8.16 | 1.08597 |
+| **laughing** | positive | 8.27 | 1.066 |
 | **joy** | positive | 8.16 | 1.0568 |
 | **happiness** | positive | 8.44 | 0.9723 |
 | **suffer** | negative | 2.08 | 1.3827 |
 | **killed** | negative | 1.56 | 1.2316 |
 | **rape** | negative | 1.44 | 0.7866 |
-| **terrorist** | negative | 1.3,0.9091 |
+| **terrorist** | negative | 1.3 | 0.9091 |
 | **virus** | negative | 2.08 | 1.3377 |
 | **fucked** | contested | 3.56 | 2.7117 |
 | **shots** | contested | 3.32 | 2.0146 |
