@@ -165,7 +165,7 @@ Our audit shows that the "Regularities" we find (mathematical patterns) are a sn
 | **suffer** | negative | 2.08 | 1.3827 |
 | **killed** | negative | 1.56 | 1.2316 |
 | **rape** | negative | 1.44 | 0.7866 |
-| **terrorist** | negative | 1.3 | 0.9091 |
+| **terrorist** | negative | 1.30 | 0.9091 |
 | **virus** | negative | 2.08 | 1.3377 |
 | **fucked** | contested | 3.56 | 2.7117 |
 | **shots** | contested | 3.32 | 2.0146 |
@@ -173,7 +173,7 @@ Our audit shows that the "Regularities" we find (mathematical patterns) are a sn
 | **oprah** | contested | 5.42 | 2.0513 |
 | **christ** | contested | 6.16 | 2.3067 |
 | **ipod** | culturally_loaded | 6.56 | 1.7515 |
-| **taxes** | culturally_loaded | 2.7 | 1.5286 |
+| **taxes** | culturally_loaded | 2.70 | 1.5286 |
 | **usa** | culturally_loaded | 6.58 | 1.8416 |
 | **saddam** | culturally_loaded | 2.48 | 1.568 |
 | **rainbow** | culturally_loaded | 8.10 | 0.9949 |
