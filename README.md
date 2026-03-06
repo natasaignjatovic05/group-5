@@ -2,7 +2,7 @@
 
 AI-Use Disclosure: This project used [ChatGPT] to assist in drafting the pandas data-wrangling functions for load_clean.py and the descriptive statistical calculations for our Week 4 quantitative analysis. Our Data Wrangler verified the cleaning logic by manually checking the handling of null values (--), and our Quantitative Analyst cross-referenced the AI-generated means and standard deviations with manual calculations on a subset of the labMT data. We maintain full responsibility for the code and can explain every line of its implementation.
 
-# Group Members
+## Group Members
 Natasa Ignjatović, Alessia Jia, Yizhi Liu, Jack Niu, Ricarda Karallus, Junyi Guo.
 
 ## Dataset Description
