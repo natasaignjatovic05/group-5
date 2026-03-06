@@ -2,6 +2,9 @@
 
 AI-Use Disclosure: This project used [ChatGPT] to assist in drafting the pandas data-wrangling functions for load_clean.py and the descriptive statistical calculations for our Week 4 quantitative analysis. Our Data Wrangler verified the cleaning logic by manually checking the handling of null values (--), and our Quantitative Analyst cross-referenced the AI-generated means and standard deviations with manual calculations on a subset of the labMT data. We maintain full responsibility for the code and can explain every line of its implementation.
 
+# Group Members
+Natasa Ignjatović, Alessia Jia, Yizhi Liu, Jack Niu, Ricarda Karallus, Junyi Guo.
+
 ## Dataset Description
 
 This project adopts a reparative approach  to the labMT sentiment lexicon. Rather than a 'paranoid' reading that merely seeks to expose the biases of Mechanical Turk data , we treat this tool as a composition. By assembling a reproducible Python pipeline and a structured Model Card, we enable the dataset to be 'repaired' and repurposed for humanistic inquiry into the emotional textures of cultural texts.
@@ -150,7 +153,7 @@ A strong pattern in the list is that the highest-disagreement words are mostly:
 	•	taboo/profanity/sex words, or
 	•	culture/ideology-loaded words
 
-Those categories usually create polarized reactions, meaning some raters give very low scores and others give higher scores. That "split” produces a large standard deviation, which is exactly what  the ranking is measuring.
+Those categories usually create polarized reactions, meaning some raters give very low scores and others give higher scores. That "split” produces a large standard deviation, which is exactly this measure captures: disagreement among raters.
 
 
 ### Interpret what your plot suggests about the four corpora.
