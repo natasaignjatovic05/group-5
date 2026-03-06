@@ -71,6 +71,16 @@ Keeping these missing values allows us to see differences between corpora.
 
 - **lyrics_rank**: Frequency rank of the word in the song lyrics corpus.
 
+## Data provenance & critical reflection
+**Provenance (how the dataset was produced in this project)**  
+Our core dataset is the labMT 1.0 sentiment lexicon (10,222 English words). Each word has an average happiness score on a 1–9 scale based on ratings from 50 Amazon Mechanical Turk participants. The dataset also includes frequency ranks for the same words across four corpora (Twitter, Google Books, The New York Times, and Song Lyrics).  
+
+For this project, we did not re-collect any ratings. We built a small, reproducible pipeline that turns the raw file into a clean CSV used by all analysis scripts. In practice, we removed non-tabular metadata rows, converted “--” to missing values (NaN) to represent “not present in that corpus”, converted numeric columns into numeric types, and validated that the cleaned output keeps the expected structure (10,222 rows, 8 columns). The cleaned dataset is saved to `data/clean/`.
+**Critical reflection (bias, limitations, and consequences)**  
+These happiness scores are not “ground truth”; they are a snapshot of how a specific rater group judged words at a specific time. Different populations, time periods, or communities may rate the same word differently, so our numbers should be treated as estimates rather than universal facts.  
+
+The dataset is word-level and removes context, so some words are naturally ambiguous or contested (irony, slang, taboo, political terms). High standard deviation can reflect real disagreement, not just noise. Also, the rank columns contain structural missingness: a NaN means the word does not appear in that corpus, not that the dataset is broken. This makes it easy to compare vocabulary coverage across corpora, but results can shift if missing values are dropped without care. Overall, the dataset is good for broad distribution patterns, but it is weak for explaining meaning in specific sentences without examples.
+
 ## Transition to Quantitative Analysis: Distributions & Ontology
 Following the **Theory of Data**, we recognize that our cleaned CSV is not a perfect mirror of human language, but a **sample**. We move from treating these scores as "matters of fact" to a **distribution**, acknowledging that "the word is not the thing".
 
