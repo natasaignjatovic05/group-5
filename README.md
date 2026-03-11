@@ -1,206 +1,262 @@
-# group-5
+# Exploring Bias, Disagreement, and Corpus Difference in the labMT 1.0 Lexicon
 
-AI-Use Disclosure: This project used [ChatGPT] to assist in drafting the pandas data-wrangling functions for load_clean.py and the descriptive statistical calculations for our Week 4 quantitative analysis. Our Data Wrangler verified the cleaning logic by manually checking the handling of null values (--), and our Quantitative Analyst cross-referenced the AI-generated means and standard deviations with manual calculations on a subset of the labMT data. We maintain full responsibility for the code and can explain every line of its implementation.
+## Overview
+
+This project studies the labMT 1.0 dataset, the sentiment lexicon used in the hedonometer introduced by Dodds et al. Rather than treating the dataset as a neutral measurement tool, we examine it as both a statistical instrument and a cultural artifact. Our goal is to understand how the lexicon is structured, how its happiness scores are distributed, which words are most contested, and what its design choices reveal about the assumptions built into the dataset. 
+
+## AI Use Disclosure
+
+This project used ChatGPT for limited support with early code drafting, project structuring, and revision of written sections. All cleaning logic, calculations, and interpretive claims were checked by the group. We remain responsible for the code and the arguments presented in this repository, in line with the course requirement that substantial AI use must be disclosed and that students must be able to explain all code and claims in the repo. :contentReference[oaicite:3]{index=3}
 
 ## Group Members
-Natasa Ignjatović, Alessia Jia, Yizhi Liu, Jack Niu, Ricarda Karallus, Junyi Guo.
 
-## Dataset Description
+Natasa Ignjatović  
+Alessia Jia  
+Yizhi Liu  
+Jack Niu  
+Ricarda Karallus  
+Junyi Guo  
 
-This project adopts a reparative approach  to the labMT sentiment lexicon. Rather than a 'paranoid' reading that merely seeks to expose the biases of Mechanical Turk data , we treat this tool as a composition. By assembling a reproducible Python pipeline and a structured Model Card, we enable the dataset to be 'repaired' and repurposed for humanistic inquiry into the emotional textures of cultural texts.
+## Dataset
 
-The dataset contains 10,222 high-frequency English words. Each word was rated for happiness by 50 participants on Amazon Mechanical Turk using a scale from 1 (least happy) to 9 (most happy). The average score represents the perceived emotional valence of each word.
+Our dataset is **labMT 1.0**, a lexicon of **10,222 English words**. Each word has:
 
-In addition to happiness ratings, the dataset includes frequency ranks of words in four different corpora:
+- a happiness rank
+- an average happiness score on a 1 to 9 scale
+- a standard deviation showing disagreement among raters
+- frequency ranks across four corpora:
+  - Twitter
+  - Google Books
+  - The New York Times
+  - Song Lyrics 
 
-- Twitter  
-- Google Books  
-- The New York Times  
-- Song Lyrics  
+The labMT lexicon is useful because it allows researchers to estimate the emotional tone of large collections of text by matching words in those texts to predefined happiness scores. At the same time, this project treats the lexicon critically. These scores are not universal truths. They reflect judgments produced by a particular annotation process, in a particular historical moment, by a particular rating population. This becomes especially visible when we examine disagreement, culturally loaded words, and corpus-specific vocabulary. 
 
-These frequency ranks indicate how often each word appears in different types of texts.
+## Methods
 
-The labMT dataset allows researchers to estimate the overall happiness of large collections of text by averaging the happiness scores of the words they contain.
+### Loading and cleaning the dataset
 
-## Data Preparation: Formalization
+We loaded the raw tab-delimited file into pandas and cleaned it using Python. Following the assignment brief, we skipped the metadata lines at the top of the file, replaced `--` with `NaN`, converted the numeric columns to numeric types, and verified the final dataset structure. The cleaned dataset contains **10,222 rows and 8 columns**. A cleaned version was saved for reproducibility and reused across the analysis scripts. 
 
-"In this project, 'cleaning' is understood as formalization: the process of making our humanistic and interpretive assumptions explicit in code."
+A missing corpus rank does not indicate broken data. It means that the word is absent from that corpus ranking. In other words, missingness in the rank columns is structurally meaningful because it tells us something about corpus coverage and linguistic difference. :contentReference[oaicite:7]{index=7}
 
-### Cleaning Process
+### Data dictionary
 
-The labMT 1.0 dataset was cleaned and prepared for analysis through the following steps:
+| Variable | Meaning | Type | Missing values | Note |
+|---|---|---|---|---|
+| `word` | The English word evaluated in the lexicon | text | none | Primary lexical unit |
+| `happiness_rank` | Rank of the word by average happiness | integer | none | Lower rank means more positive |
+| `happiness_average` | Mean happiness score on a 1 to 9 scale | float | none | Main sentiment measure |
+| `happiness_standard_deviation` | Standard deviation of ratings | float | none | Higher values indicate more disagreement |
+| `twitter_rank` | Frequency rank in the Twitter corpus | float | yes | `NaN` means absent from Twitter top 5000 |
+| `google_rank` | Frequency rank in Google Books | float | yes | `NaN` means absent from Google Books top 5000 |
+| `nyt_rank` | Frequency rank in The New York Times | float | yes | `NaN` means absent from NYT top 5000 |
+| `lyrics_rank` | Frequency rank in Song Lyrics | float | yes | `NaN` means absent from Lyrics top 5000 |
 
-1. **Metadata removal**  
-   The first rows of the file contain descriptive metadata rather than tabular data. These rows were skipped to ensure proper parsing of the dataset.
+This table directly follows the brief’s requirement to document what each column represents, its type, and how to interpret missing values. :contentReference[oaicite:8]{index=8}
 
-2. **Handling missing values**  
-   The dataset uses "--" to indicate that a word does not appear in a specific corpus (e.g., Twitter, Google Books, NYT, or Lyrics). These entries were replaced with `NaN` to ensure consistent handling of missing values in subsequent analysis.
+## Sanity Checks
 
-3. **Type conversion**  
-   All numeric columns (happiness scores and frequency ranks) were converted to appropriate numeric data types. This ensures accurate statistical calculations and prevents unintended string-based operations.
+We used several sanity checks to ensure that the cleaned dataset was structurally reliable.
 
-4. **Data validation**  
-   The dataset structure was verified after cleaning. The final cleaned dataset contains 10,222 rows and 8 columns.
+First, after cleaning, the dataset still contained **10,222 rows and 8 columns**, which confirms that parsing the raw file did not distort the expected structure. Second, we checked for duplicate words and found **no duplicated entries**, which supports the internal consistency of the lexicon. Third, we examined the most positive and most negative words by `happiness_average` to test whether the ranking looked plausible after import. :contentReference[oaicite:9]{index=9}
 
-5. **Reproducibility**  
-   A cleaned version of the dataset was saved to the `data/clean/` directory to ensure reproducibility and consistent use across analysis scripts.
+These checks are useful, but they do not prove that the dataset is unbiased or universally valid. At most, they show that the file was imported and structured correctly. Even the idea that the “top” positive and negative words make sense depends on shared cultural assumptions, which is part of what this project critically investigates. 
 
-The cleaning process ensures that the dataset is structured in one way that allows reliable quantitative analysis while preserving information about specific corpus coverage.
+### Top 10 positive words
 
-### Missing Values
+| word | happiness_average | happiness_standard_deviation |
+|---|---:|---:|
+| laughter | 8.50 | 0.9313 |
+| happiness | 8.44 | 0.9723 |
+| love | 8.42 | 1.1082 |
+| happy | 8.30 | 0.9949 |
+| laughed | 8.26 | 1.1572 |
+| laugh | 8.22 | 1.3746 |
+| laughing | 8.20 | 1.1066 |
+| excellent | 8.18 | 1.1008 |
+| laughs | 8.18 | 1.1551 |
+| joy | 8.16 | 1.0568 |
 
-Several frequency rank columns contain missing values. 
+### Top 10 negative words
 
-This happens because many words do not appear in all corpora.  
-For example, some words may appear in Twitter but not in song lyrics or news articles.
+| word | happiness_average | happiness_standard_deviation |
+|---|---:|---:|
+| terrorist | 1.30 | 0.9091 |
+| suicide | 1.30 | 0.8391 |
+| rape | 1.44 | 0.7866 |
+| terrorism | 1.48 | 0.9089 |
+| murder | 1.48 | 1.0150 |
+| death | 1.54 | 1.2811 |
+| cancer | 1.54 | 1.0730 |
+| killed | 1.56 | 1.2316 |
+| kill | 1.56 | 1.0529 |
+| died | 1.56 | 1.1980 |
 
-Keeping these missing values allows us to see differences between corpora.
+## Quantitative Results
 
-### Data Dictionary
+### 1. Distribution of happiness scores
 
-- **word**: The English word evaluated in the survey.
+The first part of our quantitative analysis examined the distribution of `happiness_average` across the entire lexicon. The assignment specifically requires a histogram and summary statistics because the shape of the distribution is part of the interpretive argument, not just background description. :contentReference[oaicite:11]{index=11}
 
-- **happiness_rank**: The rank of the word based on its average happiness score.
+![Distribution of happiness scores](figures/happiness_histogram.png)
 
-- **happiness_average**: The mean happiness rating on a 1–9 scale.
+**Figure 1.** Histogram of `happiness_average` across all 10,222 words in labMT 1.0.
 
-- **happiness_standard_deviation**: The standard deviation of ratings, indicating the level of agreement among participants.
+#### Summary statistics
 
-- **twitter_rank**: Frequency rank of the word in the Twitter corpus.
+| Statistic | Value |
+|---|---:|
+| Mean | 5.3752 |
+| Median | 5.44 |
+| Standard deviation | 1.0849 |
+| 5th percentile | 3.18 |
+| 95th percentile | 7.08 |
 
-- **google_rank**: Frequency rank of the word in the Google Books corpus.
+The distribution is centered slightly above the neutral midpoint of 5, which suggests that the lexicon leans mildly positive overall. Most words cluster around the middle range rather than the extremes. One interesting pattern is that the dataset is not symmetrically balanced around neutrality. Instead, it seems somewhat tilted toward moderately positive language. This matters because any later use of labMT as a measurement tool inherits this lexical distribution. The instrument does not begin from a neutral emotional baseline. 
 
-- **nyt_rank**: Frequency rank of the word in the New York Times corpus.
+### 2. Disagreement and contested words
 
-- **lyrics_rank**: Frequency rank of the word in the song lyrics corpus.
+The dataset also includes `happiness_standard_deviation`, which allows us to ask not only how positive or negative a word is on average, but also how much raters disagreed about it. The brief explicitly requires a scatterplot and a discussion of why some words are contested. :contentReference[oaicite:13]{index=13}
 
-## Data provenance & critical reflection
-**Provenance (how the dataset was produced in this project)**  
-Our core dataset is the labMT 1.0 sentiment lexicon (10,222 English words). Each word has an average happiness score on a 1–9 scale based on ratings from 50 Amazon Mechanical Turk participants. The dataset also includes frequency ranks for the same words across four corpora (Twitter, Google Books, The New York Times, and Song Lyrics).  
+![Average happiness versus disagreement](figures/happiness_vs_sd_scatter.png)
 
-For this project, we did not re-collect any ratings. We built a small, reproducible pipeline that turns the raw file into a clean CSV used by all analysis scripts. In practice, we removed non-tabular metadata rows and converted “--” to missing values (NaN) to represent “not present in that corpus”. We then converted numeric columns into numeric types and validated that the cleaned output keeps the expected structure (10,222 rows, 8 columns). The cleaned dataset is saved to `data/clean/`.
+**Figure 2.** Scatterplot of `happiness_average` against `happiness_standard_deviation`.
 
-**Critical reflection (bias, limitations, and consequences)**  
-These happiness scores are not “ground truth”; they are a snapshot of how a specific rater group judged words at a specific time. Different populations, time periods, or communities may rate the same word differently, so our numbers should be treated as estimates rather than universal facts.  
+The scatterplot suggests that the highest disagreement tends to appear in the middle range rather than at the most positive or most negative extremes. This makes intuitive sense. Strongly positive or negative words are often easier to rate consistently, while ambiguous, taboo, ideological, or culturally loaded words invite more varied judgments. High standard deviation therefore should not be dismissed as noise. In many cases, it is analytically interesting because it reveals unstable or socially contested meanings. 
 
-The dataset is word-level and removes context, so some words are naturally ambiguous or contested (irony, slang, taboo, political terms). For example, “shot” can refer to alcohol, vaccination, or gun violence, and “iPod” is time-specific, so the same token can carry different affect depending on context and historical moment. High standard deviation can reflect real disagreement, not just noise. Also, the rank columns contain structural missingness: a NaN means the word does not appear in that corpus, not that the dataset is broken. This makes it easy to compare vocabulary coverage across corpora, but results can shift if missing values are dropped without care. Overall, it works well for broad distribution patterns, but for contested words we still need short qualitative examples to avoid over-interpreting the numbers. In our write-up, we flag high-SD words and treat them as prompts for close reading rather than treating the mean score as a final answer.
+### 15 most contested words
 
-## Transition to Quantitative Analysis: Distributions & Ontology
-Following the **Theory of Data**, we recognize that our cleaned CSV is not a perfect mirror of human language, but a **sample**. We move from treating these scores as "matters of fact" to a **distribution**, acknowledging that "the word is not the thing".
+| word | happiness_average | happiness_standard_deviation |
+|---|---:|---:|
+| fucking | 4.64 | 2.9260 |
+| fuckin | 3.86 | 2.7405 |
+| fucked | 3.56 | 2.7117 |
+| pussy | 4.80 | 2.6650 |
+| whiskey | 5.72 | 2.6422 |
+| slut | 3.57 | 2.6300 |
+| cigarettes | 3.31 | 2.5997 |
+| fuck | 4.14 | 2.5794 |
+| mortality | 4.38 | 2.5546 |
+| cigarette | 3.09 | 2.5163 |
+| motherfuckers | 2.51 | 2.4675 |
+| churches | 5.70 | 2.4599 |
+| motherfucking | 2.64 | 2.4558 |
+| capitalism | 5.16 | 2.4524 |
+| porn | 4.18 | 2.4302 |
 
-### The Four Moments of the labMT Lexicon
-We audited the `happiness_average` distribution to define the "shape" of our dataset:
+Five especially revealing contested words are **whiskey**, **churches**, **capitalism**, **porn**, and **fucked**. These words are contested for different reasons. **Whiskey** can be associated with pleasure, sociability, addiction, or self-destruction. **Churches** and **capitalism** point more directly to ideological disagreement. **Porn** combines taboo, desire, shame, and moral judgment. **Fucked** can function as insult, exaggeration, expression of frustration, or even intensifier. These examples show that disagreement often emerges not from poor annotation, but from the fact that words can carry multiple meanings across contexts and communities. 
 
-| Moment | Metric | Value | Humanistic Interpretation |
-| :--- | :--- | :--- | :--- |
-| **1st** | **Mean** | [Insert #] | The central "vibe" or baseline happiness of the sample. |
-| **2nd** | **Variance** | [Insert #] | The level of "uncertainty" or spread in the word ratings. |
-| **3rd** | **Skewness** | [Insert #] | Identifies if the lexicon is lopsided (e.g., biased toward happy words). |
-| **4th** | **Kurtosis** | [Insert #] | Indicates the presence of "outlier" words with extreme scores. |
+### 3. Corpus comparison
 
-In the following section, we examine the distribution of happiness scores and identify key patterns within the dataset.
+The corpus rank columns allow us to compare what counts as common language across different communication environments. The assignment asks for at least one plot or table showing corpus differences and overlap. :contentReference[oaicite:16]{index=16}
 
-### Interpret the histogram in words
-### Is the distribution centered? skewed? clustered?
-### Identify 1 pattern you did not expect.
+![Corpus comparison](figures/corpus_comparison.png)
 
-The scatterplot shows a large cluster of words around happiness_average ≈ 5–7 with moderate disagreement (SD ≈ 1.1–1.7), meaning most words are rated somewhat positive and people mostly agree. Disagreement is highest for mid-range/neutral-ish words (~3–6) and generally lower at the extremes, where words have clearer emotional meanings. A surprising pattern is the dense “valley” of very low SD near happiness_average ≈ 5, suggesting many neutral everyday words are rated quite consistently.
+**Figure 3.** Comparison of labMT word presence and overlap across Twitter, Google Books, The New York Times, and Song Lyrics.
 
-### Pick 5 of the “most disagreed-about” words and discuss why they might be contested:
-### – ambiguity / multiple meanings
-### – cultural references
-### – slang and time period
-### – irony, profanity, or taboo
+Pairwise overlap between the top 5000 words in each corpus:
 
-1) fucking / fuck / fuckin / fucked / motherfucking / motherfuckers (profanity + context + intensity)
+| Pair | Shared words |
+|---|---:|
+| Twitter and Google Books | 2696 |
+| Twitter and NYT | 2881 |
+| Twitter and Lyrics | 3127 |
+| Google Books and NYT | 3414 |
+| Google Books and Lyrics | 2368 |
+| NYT and Lyrics | 2241 |
 
-These words are context-dependent:
-	•	Some people rate them very negative because they’re rude/aggressive/offensive.
-	•	Others rate them less negative (or even positive-ish) because they’re used as emphasis (“that’s fucking amazing”), joking, or in friendly slang.
-That split creates huge disagreement → high standard deviation.
+Additional overlap findings:
 
-2) pussy (multiple meanings + taboo)
+- words present in all four corpora: **1816**
+- words present in at least one corpus: **9895**
 
-This word has very different meanings:
-	•	As an insult (“coward”), it’s negative.
-	•	As a sexual term, people might react with anything from positive to negative depending on comfort, gender norms, and values.
-Because it’s taboo and ambiguous, ratings spread out a lot.
+Unique to each corpus:
 
-3) slut (taboo + cultural norms)
+- Twitter: **952**
+- Google Books: **1115**
+- NYT: **1043**
+- Lyrics: **1486**
 
-Strong moral/cultural judgement is involved:
-	•	Some see it as a harsh insult (very negative).
-	•	Others may see it as reclaimed language in some contexts, or interpret it differently based on culture/generation.
-That leads to big disagreement.
+Google Books and NYT share the largest overlap, which suggests a closer relationship between edited print language and institutional news discourse. Lyrics is the most distinct corpus, which likely reflects its expressive, genre-specific, and performance-oriented language. Twitter overlaps relatively strongly with Lyrics, which fits their more informal and conversational style. A concrete example is **lol**, which appears prominently in Twitter language but is not common in Google Books. This illustrates the broader point that “common language” depends heavily on where language is sampled from. :contentReference[oaicite:17]{index=17}
 
-4) porn (taboo + personal values)
+## Qualitative Exhibit: The Lexicon as a Cultural Artifact
 
-People’s reactions differ a lot:
-	•	Some associate it with shame/exploitation/addiction → negative.
-	•	Others associate it with pleasure/freedom/neutral media → less negative or even positive.
-So responses vary widely → high SD.
+Following the brief, we created a small exhibit of 20 words across four categories: very positive, very negative, highly contested, and weird or culturally loaded. :contentReference[oaicite:18]{index=18}
 
-5) capitalism (cultural/political associations)
+| word | category | happiness_average | happiness_standard_deviation |
+|---|---|---:|---:|
+| love | positive | 8.42 | 1.1082 |
+| successful | positive | 8.16 | 1.0759 |
+| laughing | positive | 8.20 | 1.1066 |
+| joy | positive | 8.16 | 1.0568 |
+| happiness | positive | 8.44 | 0.9723 |
+| suffer | negative | 2.08 | 1.3827 |
+| killed | negative | 1.56 | 1.2316 |
+| rape | negative | 1.44 | 0.7866 |
+| terrorist | negative | 1.30 | 0.9091 |
+| virus | negative | 2.08 | 1.3377 |
+| fucked | contested | 3.56 | 2.7117 |
+| shots | contested | 3.32 | 2.0146 |
+| omfg | contested | 4.52 | 2.0726 |
+| oprah | contested | 5.42 | 2.0513 |
+| christ | contested | 6.16 | 2.3067 |
+| ipod | culturally_loaded | 6.56 | 1.7515 |
+| taxes | culturally_loaded | 2.70 | 1.5286 |
+| usa | culturally_loaded | 6.58 | 1.8416 |
+| saddam | culturally_loaded | 2.48 | 1.5680 |
+| rainbow | culturally_loaded | 8.10 | 0.9949 |
 
-This one is interesting because it’s not “emotional” in a simple way:
-	•	Some connect it to opportunity/freedom/success → positive.
-	•	Others connect it to inequality/exploitation → negative.
-It’s contested because it’s tied to ideology and lived experience, not a single emotion.
+This exhibit makes clear that the lexicon is not just a neutral list of words with stable emotional values. Some entries, such as **love** or **terrorist**, are relatively unambiguous in mainstream English and therefore show more stable emotional ratings. Others are more revealing. **Saddam**, **USA**, **taxes**, and **rainbow** are not emotionally self-evident in the same way. Their ratings likely reflect political framing, national identity, media exposure, and cultural associations carried by the Mechanical Turk raters. This is exactly the type of inference our supervisor said needed to be developed more deeply: the scores do not simply describe the words, they also reveal something about the people who rated them and the historical environment in which they did so. **iPod** is especially useful because it exposes the temporal specificity of the lexicon. It reflects a particular technological moment rather than a timeless lexical property. :contentReference[oaicite:19]{index=19}
 
-### Connect the qualitative interpretation to the quantitative pattern
+## Critical Reflection
 
-A strong pattern in the list is that the highest-disagreement words are mostly:
-	•	taboo/profanity/sex words, or
-	•	culture/ideology-loaded words
+### Reconstructing the pipeline
 
-Those categories usually create polarized reactions, meaning some raters give very low scores and others give higher scores. That "split” produces a large standard deviation, which is exactly this measure captures: disagreement among raters.
+In our own words, the dataset pipeline can be reconstructed as follows:
 
+1. A lexicon of common English words was assembled.
+2. The words were rated for happiness by Amazon Mechanical Turk participants on a 1 to 9 scale.
+3. The ratings were aggregated into average happiness scores and standard deviations.
+4. The words were linked to corpus-specific rank columns from Twitter, Google Books, The New York Times, and Song Lyrics.
+5. In our own workflow, we loaded the raw file, skipped metadata rows, replaced `--` with missing values, converted numeric fields, and saved a cleaned version for reproducible analysis. 
 
-### Interpret what your plot suggests about the four corpora.
-The overlap heatmap shows that Google Books and the NYT share the most vocabulary in their top-5000 lists (3414 shared words), suggesting a more similar “edited/formal” register. Lyrics is the most distinct corpus, with the smallest overlaps—especially with NYT (2241)—indicating more genre-specific, emotional, and stylistic language. Twitter sits between them and overlaps relatively strongly with Lyrics (3127), consistent with both being more informal and conversational.
+### Five consequences of the dataset’s design choices
 
-### Give one concrete example of a word that is “common” in one corpus but missing in another, and interpret why that might be.
-Example word: lol — It’s very common on Twitter (rank 42) because it’s internet slang used for quick reactions and humor in casual conversation. It’s missing from Google Books’ top words because published books are more formal/edited and rarely use abbreviations like “lol,” so it doesn’t appear frequently enough to rank in that corpus.
-### Preliminary Findings: Regularities & Sampling
-Our audit shows that the "Regularities" we find (mathematical patterns) are a snapshot of the 2011 Mechanical Turk socio-technical moment. By **formalizing** our assumptions—such as converting `--` to `pd.NA`—we have "repaired" this **Convenience Sample** so it can be safely repurposed for inquiry into our own text corpora.
+**1. Words are rated in isolation rather than in context.**  
+This makes large scale sentiment scoring possible, but it also strips away syntax, irony, speaker position, and neighboring words. For example, **shots** can refer to medicine, alcohol, sports, or gun violence, but the dataset compresses those meanings into one average score. :contentReference[oaicite:21]{index=21}
 
+**2. The ratings come from a specific annotator population at a specific historical moment.**  
+This makes the dataset historically interesting, but it also means that some scores capture rater norms rather than stable lexical meaning. The scores for **Saddam**, **USA**, and **rainbow** are especially suggestive here. :contentReference[oaicite:22]{index=22}
 
-## Qualitative exploration: close reading the lexicon as a cultural artifact
-### Build a small "exhibit" of words
+**3. Disagreement is stored numerically as standard deviation.**  
+This is useful because it reveals contested words, but the number alone cannot explain why a word is contested. Words like **capitalism** and **churches** require qualitative interpretation alongside the plot. :contentReference[oaicite:23]{index=23}
 
-### code task: create a small table of 20 words 
-| **word** | **category** | **happiness_average** | **happiness_standard_deviation** |
-| :--- | :--- | :--- | :--- |
-| **love** | positive  |8.42 | 1.1082 |
-| **successfull** | positive | 8.16 | 1.08597 |
-| **laughing** | positive | 8.27 | 1.066 |
-| **joy** | positive | 8.16 | 1.0568 |
-| **happiness** | positive | 8.44 | 0.9723 |
-| **suffer** | negative | 2.08 | 1.3827 |
-| **killed** | negative | 1.56 | 1.2316 |
-| **rape** | negative | 1.44 | 0.7866 |
-| **terrorist** | negative | 1.30 | 0.9091 |
-| **virus** | negative | 2.08 | 1.3377 |
-| **fucked** | contested | 3.56 | 2.7117 |
-| **shots** | contested | 3.32 | 2.0146 |
-| **omfg** | contested | 4.52 | 2.0726 |
-| **oprah** | contested | 5.42 | 2.0513 |
-| **christ** | contested | 6.16 | 2.3067 |
-| **ipod** | culturally_loaded | 6.56 | 1.7515 |
-| **taxes** | culturally_loaded | 2.70 | 1.5286 |
-| **usa** | culturally_loaded | 6.58 | 1.8416 |
-| **saddam** | culturally_loaded | 2.48 | 1.568 |
-| **rainbow** | culturally_loaded | 8.10 | 0.9949 |
+**4. Corpus coverage is structurally uneven.**  
+A missing corpus rank is not an error. It shows that different communication environments privilege different vocabularies. That is why a term like **lol** can feel central in Twitter but absent from Google Books. 
 
-### Intepretation 
+**5. The lexicon leans mildly positive overall.**  
+This means the tool is not emotionally neutral at baseline. Since the distribution is centered above 5, later hedonometer analyses inherit a slightly positive lexical environment from the start. :contentReference[oaicite:25]{index=25}
 
-The positive words are often associated with emotions like “love” and “joy”. These are universal emotions which are not dependent on cultural backgrounds and can represent a wide range of individual experiences. The negative words are often associated with violence and suffering. These words are likely unambiguous, and the negative association is universal among individuals. 
+## Instrument Note
 
-Words with high standard deviation imply that individuals associate them with different meanings and that the words themselves can be overly simplified without context. This can have various reasons; for instance, the word “Christ” can exhibit significant variations across cultural and religious backgrounds. Whereas the word “shot” can have different meanings depending on the interpretation of the word itself. The word can be associated with alcoholic shots, but also with gun violence or vaccinations. Lastly, the words “fucked” and “omfg” can be used both as a negative impression as well as an exaggeration, which depends not only on the context but also on the age of the person. 
+If we were to use labMT 1.0 as an instrument today, we would trust it most for broad aggregate comparisons across large English text collections. It is useful for detecting general shifts in emotional vocabulary, for comparing corpora at a high level, and for identifying words that are relatively stable versus highly contested. It is especially useful when paired with qualitative interpretation rather than treated as self-sufficient.
 
-Some words also carry historical and cultural meanings. These can also depend on their time period; for example, “iPod” might have a different happiness score nowadays as it is not commonly used anymore. The same goes for country rankings(“USA”), as international relations and reputations can change notably over time. Some words in the list were quite surprising, such as “Saddam”, which likely refers to the political figure Saddam Hussein and was clearly ranked negatively. 
+At the same time, we would refuse to treat its scores as universal emotional truth. The lexicon is based on isolated words rather than contextualized language, so it cannot reliably capture irony, sentence meaning, speaker intention, or political nuance. It also reflects a particular rating population and moment in time, which means that culturally loaded words may say as much about the raters as about the words themselves.
 
-These different categories underscore, and examples demonstrate how the words themselves are shaped by emotional, historical, political and also cultural meaning. Furthermore, a high standard deviation suggests that a word is likely to have very different interpretations and associations among individuals.
+If rebuilt today, we would improve the instrument in three ways. First, we would document the rater population more transparently. Second, we would include phrase-level or sentence-level ratings for ambiguous terms. Third, we would account more explicitly for temporal change and community-specific language use. In this sense, labMT remains useful, but only when its limits are made visible rather than ignored. :contentReference[oaicite:26]{index=26}
+
+## How to Run
+
+Install dependencies from `requirements.txt`, then run the scripts in order:
+
+```bash
+pip install -r requirements.txt
+python src/load_clean.py
+python src/2_1_distrib_happ_score.py
+python src/2_2_contested.py
+python src/2_3_corpus_comparison.py
+python src/3_1_word_exhibit.py
 
 # Inference - Happiness Dynamics in Movie Reviews 
 
