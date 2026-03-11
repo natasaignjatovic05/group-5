@@ -36,7 +36,11 @@ The labMT lexicon is useful because it allows researchers to estimate the emotio
 
 ### Loading and cleaning the dataset
 
-We loaded the raw tab-delimited file into pandas and cleaned it using Python. Following the assignment brief, we skipped the metadata lines at the top of the file, replaced `--` with `NaN`, converted the numeric columns to numeric types, and verified the final dataset structure. The cleaned dataset contains **10,222 rows and 8 columns**. A cleaned version was saved for reproducibility and reused across the analysis scripts. 
+### Figure 1. Data cleaning workflow
+
+![Data cleaning workflow](figures/data_cleaning_workflow.png)
+
+As shown in Figure 1, we loaded the raw tab-delimited file into pandas and cleaned it using Python. Following the assignment brief, we skipped the metadata lines at the top of the file, replaced `--` with `NaN`, converted the numeric columns to numeric types, and verified the final dataset structure. The cleaned dataset contains **10,222 rows and 8 columns**. A cleaned version was saved for reproducibility and reused across the analysis scripts. 
 
 A missing corpus rank does not indicate broken data. It means that the word is absent from that corpus ranking. In other words, missingness in the rank columns is structurally meaningful because it tells us something about corpus coverage and linguistic difference. 
 
