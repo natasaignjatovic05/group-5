@@ -19,6 +19,13 @@ This project used ChatGPT for limited support with early code drafting, project 
 | Junyi Guo | Provenance & critique lead |
 | Yizhi Liu | Editor & figure curator |
 
+### Tools used
+Python, pandas, and matplotlib were used for cleaning, analysis, and visualization. ChatGPT was used for limited drafting and revision support. All final code decisions and interpretive claims were reviewed by the group.
+
+### Source
+labMT 1.0 dataset provided in course materials.  
+Dodds et al. (2011), hedonometer related study.
+
 ## Dataset
 
 Our dataset is **labMT 1.0**, a lexicon of **10,222 English words**. Each word has:
@@ -197,7 +204,7 @@ Unique to each corpus:
 - NYT: **1043**
 - Lyrics: **1486**
 
-Google Books and NYT share the largest overlap, which suggests a closer relationship between edited print language and institutional news discourse. Lyrics is the most distinct corpus, which likely reflects its expressive, genre-specific, and performance-oriented language. Twitter overlaps relatively strongly with Lyrics, which fits their more informal and conversational style. A concrete example is **lol**, which appears prominently in Twitter language but is not common in Google Books. This illustrates the broader point that “common language” depends heavily on where language is sampled from. 
+Google Books and NYT share the largest overlap, which suggests a closer relationship between edited print language and institutional news discourse. Lyrics appears to be the most distinct corpus, likely because it reflects more expressive and genre-specific language than edited print or news text. Twitter overlaps relatively strongly with Lyrics, which fits their more informal and conversational style. A concrete example is **lol**, which appears prominently in Twitter language but is not common in Google Books. This illustrates the broader point that “common language” depends heavily on where language is sampled from. 
 
 ## Qualitative Exhibit: The Lexicon as a Cultural Artifact
 
@@ -279,3 +286,12 @@ python src/2_1_distrib_happ_score.py
 python src/2_2_contested.py
 python src/2_3_corpus_comparison.py
 python src/3_1_word_exhibit.py
+
+Repository structure:
+
+- `data/` contains the raw dataset and cleaned output
+- `src/` contains the Python scripts
+- `figures/` contains the plots and workflow figure used in this README
+- `tables/` stores exported tables referenced in the analysis
+
+To ensure reproducibility, all plots should be saved into `figures/` and all outputs should be generated from the scripts above in a clean environment using only `requirements.txt`.
