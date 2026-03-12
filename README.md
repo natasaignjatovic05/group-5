@@ -243,16 +243,19 @@ In our own words, the dataset pipeline can be reconstructed as follows:
 ### Five consequences of the dataset’s design choices
 
 **1. Words are rated in isolation rather than in context.**  
-This makes large scale sentiment scoring possible, but it also strips away syntax, irony, speaker position, and neighboring words. For example, **shots** can refer to medicine, alcohol, sports, or gun violence, but the dataset compresses those meanings into one average score. 
+This makes large scale sentiment scoring possible, but it also strips away syntax, irony, speaker position, and neighboring words. 
+concrete example: **shots** can refer to medicine, alcohol, sports, or gun violence, but the dataset compresses those meanings into one average score. 
 
 **2. The ratings come from a specific annotator population at a specific historical moment.**  
-This makes the dataset historically interesting, but it also means that some scores capture rater norms rather than stable lexical meaning. The scores for **Saddam**, **USA**, and **rainbow** are especially suggestive here. 
+This makes the dataset historically interesting, but it also means that some scores capture rater norms rather than stable lexical meaning. 
+concrete example: The scores for **Saddam**, **USA**, and **rainbow** are especially suggestive here. 
 
 **3. Disagreement is stored numerically as standard deviation.**  
-This is useful because it reveals contested words, but the number alone cannot explain why a word is contested. Words like **capitalism** and **churches** require qualitative interpretation alongside the plot. 
+This is useful because it reveals contested words, but the number alone cannot explain why a word is contested. concrete example: Words like **capitalism** and **churches** require qualitative interpretation alongside the plot. 
 
 **4. Corpus coverage is structurally uneven.**  
-A missing corpus rank is not an error. It shows that different communication environments privilege different vocabularies. That is why a term like **lol** can feel central in Twitter but absent from Google Books. 
+A missing corpus rank is not an error. It shows that different communication environments privilege different vocabularies. 
+concrete example: That is why a term like **lol** can feel central in Twitter but absent from Google Books. 
 
 **5. The lexicon leans mildly positive overall.**  
 This means the tool is not emotionally neutral at baseline. Since the distribution is centered above 5, later hedonometer analyses inherit a slightly positive lexical environment from the start. 
