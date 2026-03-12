@@ -101,6 +101,17 @@ These checks do not prove that the dataset is unbiased or universally valid. The
 | kill | 1.56 | 1.0529 |
 | died | 1.56 | 1.1980 |
 
+The top positive words are laughter, love, and happiness etc. These are words that 
+are semantically and culturally unambiguous in mainstream English. 
+This makes them "make sense" in the sense that they align with what most 
+raters would agree is positive. However, "making sense" here is not neutral: 
+it relies on shared cultural norms. A word like **joy** might carry religious 
+connotations for some raters that the average score erases. Similarly, the 
+most negative words including terrorist, rape, suicide, are socially taboo and 
+legally marked. where agreement is partly enforced rather than naturally shared. 
+The stability of these scores might reflect social desirability 
+more than genuine emotional uniformity.
+
 ## Quantitative Results
 
 ### 1. Distribution of happiness scores
